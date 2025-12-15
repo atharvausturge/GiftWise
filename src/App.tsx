@@ -3,11 +3,11 @@ import { Plus, Search, Moon, Sun, Download, Upload, Gift as GiftIcon, Menu, X } 
 import { Person, Gift } from './types';
 import { loadData, saveData, loadDarkMode, saveDarkMode, exportData, importData } from './utils/storage';
 import { generateId, calculateTotalCost, calculateTotalSpent, getBudgetStatus, formatCurrency } from './utils/helpers';
-import PersonCard from './components/PersonCard';
-import PersonModal from './components/PersonModal';
+// import PersonCard from './components/PersonCard';
+// import PersonModal from './components/PersonModal';
 import GiftModal from './components/GiftModal';
 import GiftItem from './components/GiftItem';
-import ConfirmDialog from './components/ConfirmDialog';
+// import ConfirmDialog from './components/ConfirmDialog';
 
 function App() {
   const [people, setPeople] = useState<Person[]>([]);
