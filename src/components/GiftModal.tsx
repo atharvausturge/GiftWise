@@ -69,7 +69,7 @@ export default function GiftModal({ isOpen, onClose, onSave, gift }: GiftModalPr
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent dark:bg-gray-700 dark:text-white"
             placeholder="Enter gift title"
             required
             autoFocus
@@ -84,7 +84,7 @@ export default function GiftModal({ isOpen, onClose, onSave, gift }: GiftModalPr
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent dark:bg-gray-700 dark:text-white"
             placeholder="0.00"
             min="0"
             step="0.01"
@@ -100,7 +100,7 @@ export default function GiftModal({ isOpen, onClose, onSave, gift }: GiftModalPr
             type="text"
             value={url}
             onChange={(e) => handleUrlChange(e.target.value)}
-            className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white ${
+            className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent dark:bg-gray-700 dark:text-white ${
               urlError ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'
             }`}
             placeholder="https://example.com/product"
@@ -114,7 +114,7 @@ export default function GiftModal({ isOpen, onClose, onSave, gift }: GiftModalPr
             id="purchased"
             checked={purchased}
             onChange={(e) => setPurchased(e.target.checked)}
-            className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+            className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-600"
           />
           <label htmlFor="purchased" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
             Purchased
@@ -131,7 +131,7 @@ export default function GiftModal({ isOpen, onClose, onSave, gift }: GiftModalPr
           </button>
           <button
             type="submit"
-            className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
           >
             {gift ? 'Save Changes' : 'Add Gift'}
           </button>

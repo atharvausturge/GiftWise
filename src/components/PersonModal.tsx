@@ -49,7 +49,7 @@ export default function PersonModal({ isOpen, onClose, onSave, person }: PersonM
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent dark:bg-gray-700 dark:text-white"
             placeholder="Enter name"
             required
             autoFocus
@@ -63,7 +63,7 @@ export default function PersonModal({ isOpen, onClose, onSave, person }: PersonM
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent dark:bg-gray-700 dark:text-white"
             placeholder="Optional notes"
             rows={3}
           />
@@ -77,7 +77,7 @@ export default function PersonModal({ isOpen, onClose, onSave, person }: PersonM
             type="number"
             value={budget}
             onChange={(e) => setBudget(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent dark:bg-gray-700 dark:text-white"
             placeholder="0.00"
             min="0"
             step="0.01"
@@ -94,7 +94,7 @@ export default function PersonModal({ isOpen, onClose, onSave, person }: PersonM
           </button>
           <button
             type="submit"
-            className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
           >
             {person ? 'Save Changes' : 'Add Person'}
           </button>

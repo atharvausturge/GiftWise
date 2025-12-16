@@ -21,8 +21,8 @@ export default function PersonCard({ person, isSelected, onSelect, onEdit, onDel
       onClick={onSelect}
       className={`p-4 rounded-lg cursor-pointer transition-all ${
         isSelected
-          ? 'bg-blue-50 dark:bg-blue-900/30 border-2 border-blue-500'
-          : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700'
+          ? 'bg-emerald-50 dark:bg-emerald-900/30 border-2 border-emerald-600'
+          : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-emerald-400 dark:hover:border-emerald-700'
       }`}
     >
       <div className="flex items-start justify-between mb-2">

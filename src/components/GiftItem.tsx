@@ -23,7 +23,7 @@ export default function GiftItem({ gift, onEdit, onDelete, onTogglePurchased }: 
           type="checkbox"
           checked={gift.purchased}
           onChange={onTogglePurchased}
-          className="w-5 h-5 mt-0.5 text-blue-500 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+          className="w-5 h-5 mt-0.5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-600 cursor-pointer"
         />
 
         <div className="flex-1 min-w-0">
@@ -56,7 +56,7 @@ export default function GiftItem({ gift, onEdit, onDelete, onTogglePurchased }: 
           <div className="flex items-center gap-3 text-sm">
             <span
               className={`font-semibold ${
-                gift.purchased ? 'text-gray-500 dark:text-gray-400' : 'text-blue-600 dark:text-blue-400'
+                gift.purchased ? 'text-gray-500 dark:text-gray-400' : 'text-emerald-700 dark:text-emerald-400'
               }`}
             >
               {formatCurrency(gift.price)}
@@ -69,7 +69,7 @@ export default function GiftItem({ gift, onEdit, onDelete, onTogglePurchased }: 
                   href={gift.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                  className="flex items-center gap-1 text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span>View Product</span>

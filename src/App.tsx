@@ -189,7 +189,7 @@ function App() {
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <GiftIcon className="w-6 h-6 text-blue-500" />
+                <GiftIcon className="w-6 h-6 text-emerald-600" />
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">GiftWise</h1>
               </div>
               <div className="flex gap-1">
@@ -225,7 +225,7 @@ function App() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search people..."
-                className="w-full pl-9 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                className="w-full pl-9 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent dark:bg-gray-700 dark:text-white"
               />
             </div>
 
@@ -234,7 +234,7 @@ function App() {
                 setEditingPerson(null);
                 setIsPersonModalOpen(true);
               }}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
             >
               <Plus className="w-4 h-4" />
               Add Person
@@ -317,7 +317,7 @@ function App() {
                     setEditingGift(null);
                     setIsGiftModalOpen(true);
                   }}
-                  className="mt-4 flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="mt-4 flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                   Add Gift
