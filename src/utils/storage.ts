@@ -8,7 +8,18 @@ export const loadData = (): Person[] => {
     const data = localStorage.getItem(STORAGE_KEY);
     if (data) {
       const parsed = JSON.parse(data);
-      return parsed.people || [];
+      const people: Person[] = parsed.people || [];
+      // Normalize gifts for backward compatibility (ensure priority exists)
+      people.forEach((p) => {
+        p.gifts = (p.gifts || []).map((g: any) => ({
+          priority: g.priority || 'medium',
+          tags: g.tags || [],
+          imageUrl: g.imageUrl || '',
+          dueDate: g.dueDate || '',
+          ...g,
+        }));
+      });
+      return people;
     }
   } catch (error) {
     console.error('Error loading data:', error);
@@ -69,7 +80,18 @@ export const importData = (file: File): Promise<Person[]> => {
       try {
         const data = JSON.parse(e.target?.result as string);
         if (data.people && Array.isArray(data.people)) {
-          resolve(data.people);
+          const people: Person[] = data.people;
+          // Normalize priorities for imported data
+          people.forEach((p) => {
+            p.gifts = (p.gifts || []).map((g: any) => ({
+              priority: g.priority || 'medium',
+              tags: g.tags || [],
+              imageUrl: g.imageUrl || '',
+              dueDate: g.dueDate || '',
+              ...g,
+            }));
+          });
+          resolve(people);
         } else {
           reject(new Error('Invalid data format'));
         }

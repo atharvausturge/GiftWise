@@ -26,6 +26,18 @@ export default function GiftItem({ gift, onEdit, onDelete, onTogglePurchased }: 
           className="w-5 h-5 mt-0.5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-600 cursor-pointer"
         />
 
+        {/* thumbnail */}
+        {gift.imageUrl ? (
+          <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0">
+            <img
+              src={gift.imageUrl}
+              alt={gift.title}
+              onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')}
+              className="w-12 h-12 object-cover"
+            />
+          </div>
+        ) : null}
+
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
             <h4
@@ -61,6 +73,43 @@ export default function GiftItem({ gift, onEdit, onDelete, onTogglePurchased }: 
             >
               {formatCurrency(gift.price)}
             </span>
+
+            {/* Priority badge */}
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium">
+              {gift.priority === 'high' ? (
+                <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded-full">High</span>
+              ) : gift.priority === 'low' ? (
+                <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">Low</span>
+              ) : (
+                <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Medium</span>
+              )}
+            </span>
+
+            {/* Tags */}
+            {gift.tags && gift.tags.length > 0 && (
+              <div className="flex items-center gap-1 flex-wrap">
+                {gift.tags.map((tag) => (
+                  <span key={tag} className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-2 py-0.5 rounded-full">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Due date */}
+            {gift.dueDate && (
+              (() => {
+                const d = new Date(gift.dueDate);
+                const today = new Date();
+                const diff = Math.ceil((d.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+                const isPast = diff < 0;
+                const isSoon = diff >= 0 && diff <= 7;
+                const classes = isPast ? 'text-red-600' : isSoon ? 'text-amber-600' : 'text-gray-600 dark:text-gray-400';
+                return (
+                  <span className={`text-sm ${classes} ml-2`}>Due: {d.toLocaleDateString()}</span>
+                );
+              })()
+            )}
 
             {gift.url && (
               <>

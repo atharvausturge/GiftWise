@@ -4,6 +4,10 @@ export interface Gift {
   price: number;
   purchased: boolean;
   url: string;
+  priority?: 'low' | 'medium' | 'high';
+  tags?: string[];
+  imageUrl?: string;
+  dueDate?: string; // ISO date string, optional
 }
 
 export interface Person {

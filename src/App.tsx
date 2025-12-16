@@ -21,6 +21,9 @@ function App() {
 
   const [isGiftModalOpen, setIsGiftModalOpen] = useState(false);
   const [editingGift, setEditingGift] = useState<Gift | null>(null);
+  const [giftSort, setGiftSort] = useState<'default' | 'priceAsc' | 'priceDesc' | 'priority'>('default');
+  const [tagFilter, setTagFilter] = useState<string>('all');
+  const [purchasedFilter, setPurchasedFilter] = useState<'all' | 'purchased' | 'notPurchased' | 'dueSoon'>('all');
 
   const [confirmDialog, setConfirmDialog] = useState<{
     isOpen: boolean;
@@ -96,16 +99,19 @@ function App() {
     });
   };
 
-  const handleAddGift = (giftData: { title: string; price: number; purchased: boolean; url: string }) => {
+  const handleAddGift = (giftData: { title: string; price: number; purchased: boolean; url: string; priority?: 'low' | 'medium' | 'high'; tags?: string[]; imageUrl?: string; dueDate?: string }) => {
     if (!selectedPersonId) return;
     const newGift: Gift = {
       id: generateId(),
       ...giftData,
+      tags: giftData.tags || [],
+      imageUrl: giftData.imageUrl || '',
+      dueDate: giftData.dueDate || '',
     };
     setPeople(people.map(p => (p.id === selectedPersonId ? { ...p, gifts: [...p.gifts, newGift] } : p)));
   };
 
-  const handleEditGift = (giftData: { title: string; price: number; purchased: boolean; url: string }) => {
+  const handleEditGift = (giftData: { title: string; price: number; purchased: boolean; url: string; priority?: 'low' | 'medium' | 'high'; tags?: string[]; imageUrl?: string; dueDate?: string }) => {
     if (!selectedPersonId || !editingGift) return;
     setPeople(
       people.map(p =>
@@ -115,6 +121,29 @@ function App() {
       )
     );
     setEditingGift(null);
+  };
+
+  const markAllPurchased = () => {
+    if (!selectedPersonId) return;
+    setPeople(people.map(p => (p.id === selectedPersonId ? { ...p, gifts: p.gifts.map(g => ({ ...g, purchased: true })) } : p)));
+  };
+
+  const unmarkAllPurchased = () => {
+    if (!selectedPersonId) return;
+    setPeople(people.map(p => (p.id === selectedPersonId ? { ...p, gifts: p.gifts.map(g => ({ ...g, purchased: false })) } : p)));
+  };
+
+  const deletePurchasedGifts = () => {
+    if (!selectedPersonId) return;
+    const person = people.find((p) => p.id === selectedPersonId);
+    setConfirmDialog({
+      isOpen: true,
+      title: 'Delete purchased gifts',
+      message: `Are you sure you want to delete all purchased gifts for ${person?.name}? This cannot be undone.`,
+      onConfirm: () => {
+        setPeople(people.map(p => (p.id === selectedPersonId ? { ...p, gifts: p.gifts.filter(g => !g.purchased) } : p)));
+      },
+    });
   };
 
   const handleDeleteGift = (giftId: string) => {
@@ -163,11 +192,48 @@ function App() {
 
   const sortedPeople = [...people].sort((a, b) => a.name.localeCompare(b.name));
 
-  const filteredPeople = sortedPeople.filter(person =>
-    person.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // Compute list of unique tags across everyone (for filter options)
+  const allTags = Array.from(new Set(people.flatMap((p) => p.gifts.flatMap((g) => g.tags || [])))).sort();
+
+  const filteredPeople = sortedPeople.filter((person) =>
+    person.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+    (tagFilter === 'all' ? true : person.gifts.some((g) => (g.tags || []).includes(tagFilter)))
   );
 
   const selectedPerson = people.find(p => p.id === selectedPersonId);
+
+  // Compute sorted/filtered gift list based on selected sort option
+  const giftsToShow = (() => {
+    if (!selectedPerson) return [] as Gift[];
+    let arr = [...selectedPerson.gifts];
+
+    // apply tag filter if any
+    if (tagFilter !== 'all') {
+      arr = arr.filter((g) => (g.tags || []).includes(tagFilter));
+    }
+
+    // apply purchased/due filters
+    if (purchasedFilter === 'purchased') {
+      arr = arr.filter((g) => g.purchased);
+    } else if (purchasedFilter === 'notPurchased') {
+      arr = arr.filter((g) => !g.purchased);
+    } else if (purchasedFilter === 'dueSoon') {
+      const today = new Date();
+      arr = arr.filter((g) => {
+        if (!g.dueDate) return false;
+        const d = new Date(g.dueDate);
+        const diff = Math.ceil((d.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        return diff >= 0 && diff <= 7;
+      });
+    }
+    if (giftSort === 'priceAsc') return arr.sort((a, b) => a.price - b.price);
+    if (giftSort === 'priceDesc') return arr.sort((a, b) => b.price - a.price);
+    if (giftSort === 'priority') {
+      const weight: Record<string, number> = { high: 2, medium: 1, low: 0 };
+      return arr.sort((a, b) => (weight[b.priority || 'medium'] ?? 1) - (weight[a.priority || 'medium'] ?? 1));
+    }
+    return arr;
+  })();
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
@@ -227,6 +293,22 @@ function App() {
                 placeholder="Search people..."
                 className="w-full pl-9 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent dark:bg-gray-700 dark:text-white"
               />
+            </div>
+
+            <div className="mb-3">
+              <label className="text-sm text-gray-600 dark:text-gray-400 mb-1 block">Filter by tag</label>
+              <select
+                value={tagFilter}
+                onChange={(e) => setTagFilter(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-sm"
+              >
+                <option value="all">All tags</option>
+                {allTags.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <button
@@ -311,17 +393,67 @@ function App() {
                     </div>
                   )}
                 </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={markAllPurchased}
+                      className="px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 text-sm"
+                    >
+                      Mark all purchased
+                    </button>
+                    <button
+                      onClick={unmarkAllPurchased}
+                      className="px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 text-sm"
+                    >
+                      Unmark all
+                    </button>
+                    <button
+                      onClick={deletePurchasedGifts}
+                      className="px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 text-sm"
+                    >
+                      Delete purchased
+                    </button>
+                  </div>
 
-                <button
-                  onClick={() => {
-                    setEditingGift(null);
-                    setIsGiftModalOpen(true);
-                  }}
-                  className="mt-4 flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add Gift
-                </button>
+                <div className="mt-4 flex items-center gap-3">
+                  <button
+                    onClick={() => {
+                      setEditingGift(null);
+                      setIsGiftModalOpen(true);
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Gift
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm text-gray-600 dark:text-gray-400">Sort:</label>
+                    <select
+                      value={giftSort}
+                      onChange={(e) => setGiftSort(e.target.value as any)}
+                      className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-sm"
+                    >
+                      <option value="default">Default</option>
+                      <option value="priceAsc">Price ↑</option>
+                      <option value="priceDesc">Price ↓</option>
+                      <option value="priority">Priority</option>
+                    </select>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm text-gray-600 dark:text-gray-400">Filter:</label>
+                    <select
+                      value={purchasedFilter}
+                      onChange={(e) => setPurchasedFilter(e.target.value as any)}
+                      className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-sm"
+                    >
+                      <option value="all">All</option>
+                      <option value="purchased">Purchased</option>
+                      <option value="notPurchased">Not purchased</option>
+                      <option value="dueSoon">Due soon</option>
+                    </select>
+                  </div>
+                </div>
               </div>
 
               <div className="flex-1 overflow-y-auto p-4 md:p-6">
@@ -331,7 +463,7 @@ function App() {
                   </div>
                 ) : (
                   <div className="space-y-3 max-w-3xl w-full">
-                    {selectedPerson.gifts.map(gift => (
+                    {giftsToShow.map(gift => (
                       <GiftItem
                         key={gift.id}
                         gift={gift}
